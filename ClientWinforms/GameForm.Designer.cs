@@ -54,13 +54,15 @@ namespace ClientWinforms
             ((System.ComponentModel.ISupportInitialize)icePlayerPicture).BeginInit();
             ((System.ComponentModel.ISupportInitialize)exitPicture).BeginInit();
             SuspendLayout();
-            // 
+            //
             // backgroundPicture
-            // 
+            //
             backgroundPicture.BackColor = Color.Black;
+            backgroundPicture.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             backgroundPicture.Location = new Point(12, 12);
             backgroundPicture.Name = "backgroundPicture";
             backgroundPicture.Size = new Size(900, 560);
+            backgroundPicture.SizeMode = PictureBoxSizeMode.StretchImage;
             backgroundPicture.TabIndex = 0;
             backgroundPicture.TabStop = false;
             // 
