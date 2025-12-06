@@ -1,35 +1,38 @@
-﻿using System;
+using System;
 using System.Net.Sockets;
 using System.Text;
 
-namespace ClientConsoleExamples
+namespace ClientConsole
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            string serverAddress = "127.0.0.1";
-            int port = 12345;
+            const string serverAddress = "127.0.0.1";
+            const int port = 12345;
 
-            // 连接到服务器
-            TcpClient client = new TcpClient(serverAddress, port);
-            NetworkStream stream = client.GetStream();
+            var client = new TcpClient(serverAddress, port);
+            using var stream = client.GetStream();
+            Console.WriteLine("连接到服务器成功！使用 MOVE:Player:dx:dy 或 RESET 发送指令。");
 
-            Console.WriteLine("连接到服务器成功！");
+            var buffer = new byte[512];
+            var bytesRead = stream.Read(buffer, 0, buffer.Length);
+            Console.WriteLine(Encoding.UTF8.GetString(buffer, 0, bytesRead));
 
             while (true)
             {
-                // 输入信息
-                Console.Write("请输入消息发送给服务器: ");
-                string message = Console.ReadLine();
-                byte[] data = Encoding.UTF8.GetBytes(message);
+                var message = Console.ReadLine();
+                if (string.IsNullOrWhiteSpace(message))
+                {
+                    message = "INIT";
+                }
+
+                var data = Encoding.UTF8.GetBytes(message);
                 stream.Write(data, 0, data.Length);
 
-                // 接收服务器的回应
-                byte[] buffer = new byte[1024];
-                int bytesRead = stream.Read(buffer, 0, buffer.Length);
-                string response = Encoding.UTF8.GetString(buffer, 0, bytesRead);
-                Console.WriteLine("服务器回应: " + response);
+                bytesRead = stream.Read(buffer, 0, buffer.Length);
+                var response = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+                Console.WriteLine(response);
             }
         }
     }
